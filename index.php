@@ -1,5 +1,5 @@
 <?php
-
+//
 require './vendor/autoload.php';
 
 $c = \App\Common\Helpers::get('c');
@@ -19,6 +19,5 @@ if (!method_exists($c, $a)) {
     throw new Exception($a . '不存在');
 }
 
-// var_dump(\App\Connection\Database::connect());exit;
 $controller = new $c;
 $controller->$a();
