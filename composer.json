@@ -1,0 +1,19 @@
+{
+    "name": "lishuo/dining-room3.local",
+    "type": "project",
+    "authors": [
+        {
+            "name": "li shuo",
+            "email": "lishuocoder@163.com"
+        }
+    ],
+    "require": {
+        "php":"^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\":"App/"
+        }
+    }
+
+}
