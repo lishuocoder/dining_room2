@@ -4,7 +4,6 @@ require './vendor/autoload.php';
 
 $c = \App\Common\Helpers::get('c');
 $a = \App\Common\Helpers::get('a');
-
 if (!$c || !$a) {
     throw new Exception('c和a不可为空');
 }
