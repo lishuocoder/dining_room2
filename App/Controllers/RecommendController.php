@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Controllers;
-
 
 use App\Common\Helpers;
 use App\Models\Food;
@@ -19,6 +17,8 @@ class RecommendController
         $sql2 = "select * from `#table#` where id in ($ids)";
         $foodModel = new Food();
         $rows = $foodModel->query($sql2)->fetchAll(\PDO::FETCH_ASSOC);
-        Helpers::responseJson($rows);
+        Helpers::responseJson(
+            Helpers::responseFormat(0, $rows, 'ok')
+        );
     }
 }

@@ -11,7 +11,6 @@ class Database
 
     private function __construct()
     {
-
         $dbConfig = Helpers::config('db');
         $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['database']}";
         // var_dump($dsn);exit;
