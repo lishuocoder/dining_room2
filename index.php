@@ -11,7 +11,7 @@ $c = '\App\Controllers\\' . ucfirst($c) . 'Controller';
 $a = $a . 'Action';
 
 if (!class_exists($c)) {
-    throw new Exception($c . '不存在');
+    throw new Exception($c . '不存在'); //class_exists检查类是否存在
 }
 
 if (!method_exists($c, $a)) {

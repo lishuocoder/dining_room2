@@ -13,6 +13,8 @@ class BannerController
         $sql = 'select * from `#table#` where `status`=1 order by `sort` asc';
         $rows = $model->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
 
-       Helpers::responseJson($rows);
+        Helpers::responseJson(
+            Helpers::responseFormat(0, $rows, 'ok')
+        );
     }
 }

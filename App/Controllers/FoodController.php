@@ -18,7 +18,9 @@ class FoodController
         $rows = $model->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
 
 
-        Helpers::responseJson($rows);
+        Helpers::responseJson(
+            Helpers::responseFormat(0, $rows, 'ok')
+        );
 
 
     }
