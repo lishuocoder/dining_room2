@@ -9,6 +9,10 @@ class Helpers
         return isset($_GET[$key]) ? $_GET[$key] : null; //isset判断变量是否声明
     }
 
+    public static function post(string $key) {
+        return isset($_POST[$key]) ? $_POST[$key] : null;
+    }
+
     public static function config($key)
     {
         $configs = require_once './config.php';  //require_once 加载文件一次
@@ -26,15 +30,16 @@ class Helpers
         header('Access-Control-Allow-Origin:*');
         echo json_encode($data);exit;
     }
+
     /**
      * 返回正确的json格式数据
      *
-     * @param integer $error
+     * @param int $error
      * @param array $data
      * @param string $msg
-     * @return void
+     * @return array
      */
-    public static function responseFormat(int $error,array $data,string $msg){
+    public static function responseFormat(int $error,$data = null, $msg = ''){
         return[
             'error' => $error,
             'data' => $data,

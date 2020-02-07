@@ -2,7 +2,7 @@
 
 namespace App\Connection;
 
-class Database
+class Redis
 {
     
 }
