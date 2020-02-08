@@ -12,7 +12,7 @@ class Database
     private function __construct()
     {
         $dbConfig = Helpers::config('db');
-        $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['database']}";
+        $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['database']};charset=utf8mb4";
         // var_dump($dsn);exit;
         self::$conn = new \PDO($dsn, $dbConfig['username'], $dbConfig['password']);
     }
