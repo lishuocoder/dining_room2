@@ -118,7 +118,7 @@ class OrderController
             $orderDetailModel->insert($foodData);
             $amount += $price;
         }
-        $orderModel->exec('update #table# set `price`=:price where `id`=:id', ['price' => $amount, 'id' => $order['id']]);
+        $orderModel->exec('update #table# set `price`=`price`+:price where `id`=:id', ['price' => $amount, 'id' => $order['id']]);
         Database::connect()->commit();
         Helpers::responseJson(
             Helpers::responseFormat(0, null, 'OK')
