@@ -24,15 +24,19 @@ class OrderController
         )->fetch(\PDO::FETCH_ASSOC);
         if (!$order) {
             Helpers::responseJson(
-                Helpers::responseFormat(0, [], 'OK')
+                Helpers::responseFormat(0, null, 'OK')
             );
         }
+        $responseData = [
+            'order' => $order,
+        ];
         $orderDetailModel = new OrderDetail();
-        $orderDetails = $orderDetailModel->query(
-            "select #table#.order_id, #table#.num, #table#.price as price_sum, foods.* from #table# left join `foods` on #table#.food_id=foods.id where order_id = {$order['id']}"
+        $responseData['order']['order_detail'] = $orderDetailModel->query(
+            "select #table#.id, #table#.order_id, #table#.food_id, #table#.num, #table#.price as order_price, foods.id as food_id,foods.price as food_price,foods.img,foods.name from #table# left join `foods` on #table#.food_id=foods.id where order_id = {$order['id']}"
         )->fetchAll(\PDO::FETCH_ASSOC);
+
         Helpers::responseJson(
-            Helpers::responseFormat(1, $orderDetails, 'ok')
+            Helpers::responseFormat(1, $responseData, 'ok')
         );
     }
 
