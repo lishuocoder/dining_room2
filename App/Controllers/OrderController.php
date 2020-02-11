@@ -117,6 +117,8 @@ class OrderController
             $orderDetailModel = new OrderDetail();
             $orderDetailModel->insert($foodData);
             $amount += $price;
+            //增加菜的销量
+            $foodModel->exec("update #table# set `sales_volume` = `sales_volume`+{$food['num']} where id = {$food['food_id']}");
         }
         $orderModel->exec('update #table# set `price`=`price`+:price where `id`=:id', ['price' => $amount, 'id' => $order['id']]);
         Database::connect()->commit();
