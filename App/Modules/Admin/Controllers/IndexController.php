@@ -28,7 +28,9 @@ class IndexController {
         }
         echo Helpers::responseJson(Helpers::responseFormat(0, $desks));
     }
-
+    /**
+     * 订单查询接口
+     */
     public function orderAction() {
         $orderId = Helpers::get('order_id');
         $orderModel = new Order();
