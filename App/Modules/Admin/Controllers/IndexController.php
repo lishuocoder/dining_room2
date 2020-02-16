@@ -28,4 +28,15 @@ class IndexController {
         }
         echo Helpers::responseJson(Helpers::responseFormat(0, $desks));
     }
+
+    public function orderAction() {
+        $orderId = Helpers::get('order_id');
+        $orderModel = new Order();
+        if (!$order = $orderModel->getOrderFromOrderId($orderId)) {
+            echo Helpers::responseJson(Helpers::responseFormat(10, null, '订单不存在'));
+        } else {
+            echo Helpers::responseJson(Helpers::responseFormat(0, $order));
+        }
+
+    }
 }

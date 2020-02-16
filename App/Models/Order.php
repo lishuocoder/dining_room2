@@ -9,10 +9,18 @@ use App\Common\Model;
 class Order extends Model
 {
     public $tableName = 'orders';
-
-    public function getOrderFromOrderId(int $orderId) {
-
+    /**
+     * 通过订单ID获取订单详情
+     */
+    public function getOrderFromOrderId($orderId) {
+        $orderModel = new Order();
+        if (!$order = $orderModel->query("select * from #table# where id = :id", ['id' => $orderId])->fetch(\PDO::FETCH_ASSOC)) {
+            return null;
+        }
+        $order['order_detail'] = $this->getOrderDetailFromOrderId($orderId);
+        return $order;
     }
+
     /**
      * 根据桌号获取订单
      */
@@ -38,14 +46,17 @@ class Order extends Model
             return [];
         }
         foreach ($orders as $index => $order) {
-            // $responseData = [
-            //     'order' => $order,
-            // ];
-            $orderDetailModel = new OrderDetail();
-            $orders[$index]['order_detail'] = $orderDetailModel->query(
-                "select #table#.id, #table#.order_id, #table#.food_id, #table#.num, #table#.price as order_price, foods.id as food_id,foods.price as food_price,foods.img,foods.name from #table# left join `foods` on #table#.food_id=foods.id where order_id = {$order['id']}"
-            )->fetchAll(\PDO::FETCH_ASSOC);
+            $orders[$index]['order_detail'] = $this->getOrderDetailFromOrderId($order['id']);
         }
         return $orders;
+    }
+    /**
+     * 根据订单ID查找订单详情
+     */
+    public function getOrderDetailFromOrderId($orderId) {
+        $orderDetailModel = new OrderDetail();
+        return $orderDetailModel->query(
+            "select #table#.id, #table#.order_id, #table#.food_id, #table#.num, #table#.price as order_price, foods.id as food_id,foods.price as food_price,foods.img,foods.name from #table# left join `foods` on #table#.food_id=foods.id where order_id = {$orderId}"
+        )->fetchAll(\PDO::FETCH_ASSOC);
     }
 }
