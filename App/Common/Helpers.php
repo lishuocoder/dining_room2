@@ -46,4 +46,15 @@ class Helpers
             'msg' =>$msg,
         ];
     }
+    /**
+     * 格式化数据后直接返回
+     */
+    public static function responseFormatJson(int $error,$data = null, $msg = '') {
+        $arr = [
+            'error' => $error,
+            'data' => $data,
+            'msg' =>$msg,
+        ];
+        self::responseJson($arr);
+    }
 }
