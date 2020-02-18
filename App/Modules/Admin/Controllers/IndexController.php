@@ -23,7 +23,7 @@ class IndexController {
         foreach ($desks as $index => $desk) {
             //如果是使用中状态,则查看相关订单
             if ($desk['status'] == 2) {
-                $desks[$index]['order'] = $orderModel->getOrdersFromDeskId($desk['id'], $desk['status']);
+                $desks[$index]['order'] = $orderModel->getOrderFromDeskId($desk['id'], $desk['status']);
             }
         }
         echo Helpers::responseJson(Helpers::responseFormat(0, $desks));

@@ -22,7 +22,7 @@ class Order extends Model
     }
 
     /**
-     * 根据桌号获取订单
+     * 根据桌号获取订单列表
      */
     public function getOrdersFromDeskId($deskId = null, $status = null, $sort = 'asc') {
         $where = [];
@@ -50,6 +50,35 @@ class Order extends Model
         }
         return $orders;
     }
+
+    /**
+     * 根据桌号获取当前正在就餐的订单(一个)
+     */
+    public function getOrderFromDeskId($deskId = null) {
+        $where = [];
+        if ($deskId) {
+            $where['desk_id'] = $deskId;
+        }
+        $where['status'] = 2;
+        if ($where) {
+            $t = array_map(function ($row) {
+                return sprintf("`%s`='%s'", $row[0], $row[1]);
+            }, array_map(null, array_keys($where), array_values($where)));
+            $whereString = implode(' and ', $t);
+            $sql = sprintf('select * from #table# where %s order by id %s limit 1', $whereString, 'desc');
+        } else {
+            $sql = 'select * from #table# order by id asc limit 1';
+        }
+        $orderModel = new Order();
+
+        if (!$order = $orderModel->query($sql)->fetch(\PDO::FETCH_ASSOC)) {
+            return null;
+        }
+        $order['order_detail'] = $this->getOrderDetailFromOrderId($order['id']);
+
+        return $order;
+    }
+
     /**
      * 根据订单ID查找订单详情
      */
