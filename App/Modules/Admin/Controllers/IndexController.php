@@ -36,7 +36,7 @@ class IndexController extends Controller{
     /**
      * 订单查询接口
      */
-    public function orderAction() {
+    protected function orderAction() {
         $orderId = Helpers::get('order_id');
         $orderModel = new Order();
         if (!$order = $orderModel->getOrderFromOrderId($orderId)) {
@@ -49,7 +49,7 @@ class IndexController extends Controller{
     /**
      * 修改订单状态
      */
-    public function changeOrderStatusAction() {
+    protected function changeOrderStatusAction() {
         $orderId = Helpers::post('order_id');
         $orderStatus = Helpers::post('status');
 
