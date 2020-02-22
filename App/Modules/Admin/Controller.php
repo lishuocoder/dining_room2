@@ -10,7 +10,7 @@ class Controller extends BaseController{
 
     public function __call($method, $argc)
     {
-        if ($apiToken = $argc[0]->get('api_token')) {
+        if (!$apiToken = $argc[0]->get('api_token')) {
             Helpers::responseFormatJson(401, null, '请登录');
         }
         $userModel = new User();
