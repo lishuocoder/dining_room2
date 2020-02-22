@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Common\BaseController;
 use App\Common\Helpers;
 use App\Models\Type;
 
-class TypeController
+class TypeController extends BaseController
 {
     public function indexAction()
     {

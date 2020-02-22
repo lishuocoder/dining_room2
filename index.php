@@ -1,4 +1,7 @@
 <?php
+
+use App\Common\Request;
+
 date_default_timezone_set("Asia/Shanghai");
 //
 require './vendor/autoload.php';
@@ -26,4 +29,4 @@ if (!method_exists($c, $a)) {
 }
 
 $controller = new $c;
-$controller->$a();
+$controller->$a(new Request);

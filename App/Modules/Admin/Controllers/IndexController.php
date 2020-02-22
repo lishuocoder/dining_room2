@@ -2,18 +2,22 @@
 namespace App\Modules\Admin\Controllers;
 
 use App\Common\Helpers;
+use App\Common\Request;
 use App\Connection\Database;
 use App\Models\Desk;
 use App\Models\Order;
+use App\Modules\Admin\Controller;
 
-class IndexController {
+class IndexController extends Controller{
+    
     public function indexAction() {
         echo __FILE__;
     }
+    
     /**
      * 餐桌列表,包含所属订单
      */
-    public function desksAction() {
+    protected function desksAction(Request $request) {
         $deskModel = new Desk();
         $orderModel = new Order();
         //status 1:空闲 2:使用中

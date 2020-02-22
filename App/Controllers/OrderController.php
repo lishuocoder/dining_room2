@@ -3,7 +3,7 @@
 
 namespace App\Controllers;
 
-
+use App\Common\BaseController;
 use App\Common\Helpers;
 use App\Connection\Database;
 use App\Models\Desk;
@@ -12,7 +12,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use Exception;
 
-class OrderController
+class OrderController extends BaseController
 {
     public function indexAction() {
         $deskId = Helpers::get('desk_id');

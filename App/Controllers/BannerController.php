@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Common\BaseController;
 use App\Common\Helpers;
 use App\Models\Banner;
 
-class BannerController
+class BannerController extends BaseController
 {
     public function indexAction()
     {

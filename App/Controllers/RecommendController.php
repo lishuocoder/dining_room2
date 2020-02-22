@@ -2,11 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Common\BaseController;
 use App\Common\Helpers;
 use App\Models\Food;
 use App\Models\Recommend;
 
-class RecommendController
+class RecommendController extends BaseController
 {
     public function indexAction() {
         $place = Helpers::get('place');

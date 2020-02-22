@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Common\BaseController;
 use App\Models\Food;
 use App\Common\Helpers;
 
-class FoodController
+class FoodController extends BaseController
 {
     public function indexAction(){
         $type_id = \App\Common\Helpers::get('type_id');
