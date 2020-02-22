@@ -20,8 +20,8 @@ class LoginController extends Controller
         if (!$user) {
             Helpers::responseFormatJson(403, null, '邮箱或密码不正确');
         }
-        $apiToken = uniqid();
-        $userModel->exec('update #table# set api_token=:api_token where id=:id', ['api_token' => $apiToken, 'id' => $user['id']]);
-        Helpers::responseFormatJson(0, ['api_token' => $apiToken], '登录成功');
+        $token = uniqid();
+        $userModel->exec('update #table# set token=:token where id=:id', ['token' => $token, 'id' => $user['id']]);
+        Helpers::responseFormatJson(0, ['token' => $token], '登录成功');
     }
 }

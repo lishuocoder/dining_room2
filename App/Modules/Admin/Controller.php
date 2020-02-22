@@ -10,11 +10,11 @@ class Controller extends BaseController{
 
     public function __call($method, $argc)
     {
-        if (!$apiToken = $argc[0]->get('api_token')) {
+        if ((!$token = $argc[0]->get('token')) && (!$token = $argc[0]->server('HTTP_TOKEN'))) {
             Helpers::responseFormatJson(401, null, '请登录');
         }
         $userModel = new User();
-        $user = $userModel->query("select * from `#table#` where `api_token` = :api_token", ['api_token' => $apiToken])->fetch(\PDO::FETCH_ASSOC);
+        $user = $userModel->query("select * from `#table#` where `token` = :token", ['token' => $token])->fetch(\PDO::FETCH_ASSOC);
         if (!$user) {
             Helpers::responseFormatJson(402, null, '请重新登录');
         }
