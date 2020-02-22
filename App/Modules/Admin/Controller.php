@@ -10,7 +10,7 @@ class Controller extends BaseController{
 
     public function __call($method, $argc)
     {
-        if ((!$token = $argc[0]->get('token')) && (!$token = $argc[0]->server('HTTP_TOKEN'))) {
+        if ((!$token = $argc[0]->request('token')) && (!$token = $argc[0]->server('HTTP_TOKEN'))) {
             Helpers::responseFormatJson(401, null, '请登录');
         }
         $userModel = new User();
