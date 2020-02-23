@@ -77,6 +77,6 @@ abstract class Model
         if ($prepare->errorCode() === '00000') {
             return $this->conn->lastInsertId();
         }
-        throw new Exception($this->conn->errorInfo()[2]);
+        throw new Exception($prepare->errorInfo()[2]);
     }
 }
