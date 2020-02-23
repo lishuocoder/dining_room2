@@ -5,6 +5,7 @@ use App\Common\Helpers;
 use App\Common\Request;
 use App\Connection\Database;
 use App\Models\Desk;
+use App\Models\Food;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Modules\Admin\Controller;
@@ -56,7 +57,7 @@ class IndexController extends Controller{
 
         $orderStatusMap = [1, 3, 4];//1：结账 2：未结账 3：异常 4:取消订单
         if (!in_array($orderStatus, $orderStatusMap)) {
-            echo Helpers::responseFormatJson(11, null, '状态值非法');
+            Helpers::responseFormatJson(11, null, '状态值非法');
         }
         $orderModel = new Order();
         //检查订单状态
@@ -129,5 +130,32 @@ class IndexController extends Controller{
             Database::connect()->rollBack();
             Helpers::responseFormatJson(13, null, '数量修改失败');
         }
+    }
+
+    /**
+     * 修改菜品状态
+     * @throws \Exception
+     */
+    protected function foodStatusAction()
+    {
+        $foodId = Helpers::post('food_id');
+        $status = Helpers::post('status');//状态(1：上架 0：下架)
+        if (!$foodId || $status === null) {
+            Helpers::responseFormatJson(11, null, 'food_id,status必填');
+        }
+        $statusMap = [1, 0];
+        if (!in_array($status, $statusMap)) {
+            Helpers::responseFormatJson(11, null, 'stats非法');
+        }
+        $foodModel = new Food();
+        if (!$foodModel->exec('update #table# set status = :status, updated_at=:updated_at where id = :id', [
+            'status' => $status,
+            'id' => $foodId,
+            'updated_at' => date('Y-m-d H:i:s')
+        ])) {
+            Helpers::responseFormatJson(11, null, '修改失败');
+        }
+        Helpers::responseFormatJson(0, null, 'OK');
+
     }
 }
