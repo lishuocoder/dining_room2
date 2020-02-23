@@ -6,6 +6,7 @@ use App\Common\Request;
 use App\Connection\Database;
 use App\Models\Desk;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Modules\Admin\Controller;
 
 class IndexController extends Controller{
@@ -21,7 +22,7 @@ class IndexController extends Controller{
         $deskModel = new Desk();
         $orderModel = new Order();
         //status 1:空闲 2:使用中
-        $sql = "select id, status from #table#";
+        $sql = "select `id`, `status` from #table#";
         //所有餐桌
         $desks = $deskModel->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
         //遍历餐桌
@@ -53,7 +54,7 @@ class IndexController extends Controller{
         $orderId = Helpers::post('order_id');
         $orderStatus = Helpers::post('status');
 
-        $orderStatusMap = [1, 3];//1：结账 2：未结账 3：异常
+        $orderStatusMap = [1, 3, 4];//1：结账 2：未结账 3：异常 4:取消订单
         if (!in_array($orderStatus, $orderStatusMap)) {
             echo Helpers::responseFormatJson(11, null, '状态值非法');
         }
@@ -65,17 +66,68 @@ class IndexController extends Controller{
         }
         Database::connect()->beginTransaction();
         //修改订单状态
-        if (!$orderModel->exec("update #table# set status = :status where id = :id", ['status' => $orderStatus, 'id' => $orderId])) {
+        if (!$orderModel->exec("update #table# set `status` = :status where `id` = :id", ['status' => $orderStatus, 'id' => $orderId])) {
             Database::connect()->rollBack();
             Helpers::responseFormatJson(100, null, '订单状态修改失败');
         }
-        //不论订单状态是1还是3,都把餐桌改为空闲
+        //不论订单状态是1,3还是4,都把餐桌改为空闲
         $deskModel = new Desk();
-        if (!$deskModel->exec("update #table# set status = 1 where id = {$order['desk_id']}")) {
+        if (!$deskModel->exec("update #table# set `status` = 1 where `id` = {$order['desk_id']}")) {
             Database::connect()->rollBack();
             Helpers::responseFormatJson(100, null, '餐桌状态修改失败');
         }
         Database::connect()->commit();
         Helpers::responseFormatJson(0, null, 'OK');
+    }
+
+    /**
+     * 修改订单菜品数量
+     * @throws \Exception
+     */
+    protected function changeOrderNumAction()
+    {
+        $orderId = Helpers::post('order_id');
+        $action = Helpers::post('action');//incr decr
+        $orderDetailId = Helpers::post('order_detail_id');
+        if (!$orderId || !$action || !$orderDetailId) {
+            Helpers::responseFormatJson(13, null, 'oder_id, action, order_detail_id为必填');
+        }
+
+        $actionMap = ['incr', 'decr'];
+        if (!in_array($action, $actionMap)) {
+            Helpers::responseFormatJson(11, null, 'action参数非法');
+        }
+        $orderModel = new Order();
+        //检查订单状态
+        $order = $orderModel->getOrderFromOrderId($orderId);
+        if (!$order) {
+            Helpers::responseFormatJson(10, null, '订单不存在');
+        }
+        if ($order['status'] == 1) {
+            Helpers::responseFormatJson(10, null, '已结束的订单不支持修改');
+        }
+        Database::connect()->beginTransaction();
+        $orderDetailModel = new OrderDetail();
+        $orderDetail = $orderDetailModel->query("select * from #table# where order_id=:order_id and id=:id", ['order_id' => $orderId, 'id' => $orderDetailId])->fetch(\PDO::FETCH_ASSOC);
+        if (!$orderDetail) {
+            Helpers::responseFormatJson(10, null, '子订单不存在');
+        }
+        if ($action == 'incr') {
+            $sql = "update #table# set num = num+1 where id = {$orderDetailId}";
+            $changeOrderPriceSql = "update #table# set `price`=`price`+ {$orderDetail['price']} where `id`={$orderId}";
+        } else {
+            if ($orderDetail['num'] <= 0) {
+                Helpers::responseFormatJson(10, null, '数量不可小于0');
+            }
+            $sql = "update #table# set num = num-1 where id = {$orderDetailId}";
+            $changeOrderPriceSql = "update #table# set `price`=`price`- {$orderDetail['price']} where `id`={$orderId}";
+        }
+        if ($orderDetailModel->exec($sql) && $orderModel->exec($changeOrderPriceSql)) {
+            Database::connect()->commit();
+            Helpers::responseFormatJson(0, null, 'OK');
+        } else {
+            Database::connect()->rollBack();
+            Helpers::responseFormatJson(13, null, '数量修改失败');
+        }
     }
 }

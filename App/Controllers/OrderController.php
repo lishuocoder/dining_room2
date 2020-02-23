@@ -46,6 +46,7 @@ class OrderController extends BaseController
     }
 
     /**
+     * 创建订单
      * @throws Exception
      */
     public function createAction() {
