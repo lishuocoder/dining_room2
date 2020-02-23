@@ -8,12 +8,17 @@ use App\Common\Helpers;
 use App\Connection\Database;
 use App\Models\Desk;
 use App\Models\Food;
+use App\Models\Message;
+use App\Models\MessageOrder;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Exception;
 
 class OrderController extends BaseController
 {
+    /**
+     * @return void
+     */
     public function indexAction() {
         $deskId = Helpers::get('desk_id');
         $orderModel = new Order();
@@ -121,6 +126,12 @@ class OrderController extends BaseController
             $foodModel->exec("update #table# set `sales_volume` = `sales_volume`+{$food['num']} where id = {$food['food_id']}");
         }
         $orderModel->exec('update #table# set `price`=`price`+:price where `id`=:id', ['price' => $amount, 'id' => $order['id']]);
+        //添加消息
+        $messageOrder = new MessageOrder();
+        $messageOrder->deskId = $deskId;
+        $messageOrder->orderId = $order['id'];
+        Message::send($messageOrder);
+
         Database::connect()->commit();
         Helpers::responseJson(
             Helpers::responseFormat(0, null, 'OK')

@@ -1,4 +1,4 @@
 vendor
 error
 config.php
-.idea
+.idea/*
