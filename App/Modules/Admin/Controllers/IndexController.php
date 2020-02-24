@@ -109,18 +109,18 @@ class IndexController extends Controller{
         }
         Database::connect()->beginTransaction();
         $orderDetailModel = new OrderDetail();
-        $orderDetail = $orderDetailModel->query("select * from #table# where order_id=:order_id and id=:id", ['order_id' => $orderId, 'id' => $orderDetailId])->fetch(\PDO::FETCH_ASSOC);
+        $orderDetail = $orderDetailModel->query("select * from #table# where `order_id`=:order_id and id=:id", ['order_id' => $orderId, 'id' => $orderDetailId])->fetch(\PDO::FETCH_ASSOC);
         if (!$orderDetail) {
             Helpers::responseFormatJson(10, null, '子订单不存在');
         }
         if ($action == 'incr') {
-            $sql = "update #table# set num = num+1 where id = {$orderDetailId}";
+            $sql = "update #table# set `num` = `num`+1 where `id` = {$orderDetailId}";
             $changeOrderPriceSql = "update #table# set `price`=`price`+ {$orderDetail['price']} where `id`={$orderId}";
         } else {
             if ($orderDetail['num'] <= 0) {
                 Helpers::responseFormatJson(10, null, '数量不可小于0');
             }
-            $sql = "update #table# set num = num-1 where id = {$orderDetailId}";
+            $sql = "update #table# set `num` = `num`-1 where `id` = {$orderDetailId}";
             $changeOrderPriceSql = "update #table# set `price`=`price`- {$orderDetail['price']} where `id`={$orderId}";
         }
         if ($orderDetailModel->exec($sql) && $orderModel->exec($changeOrderPriceSql)) {
@@ -148,7 +148,7 @@ class IndexController extends Controller{
             Helpers::responseFormatJson(11, null, 'stats非法');
         }
         $foodModel = new Food();
-        if (!$foodModel->exec('update #table# set status = :status, updated_at=:updated_at where id = :id', [
+        if (!$foodModel->exec('update #table# set `status` = :status, `updated_at`=:updated_at where id = :id', [
             'status' => $status,
             'id' => $foodId,
             'updated_at' => date('Y-m-d H:i:s')
