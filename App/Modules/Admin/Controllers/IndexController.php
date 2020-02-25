@@ -91,7 +91,7 @@ class IndexController extends Controller{
         $action = Helpers::post('action');//incr decr
         $orderDetailId = Helpers::post('order_detail_id');
         if (!$orderId || !$action || !$orderDetailId) {
-            Helpers::responseFormatJson(13, null, 'oder_id, action, order_detail_id为必填');
+            Helpers::responseFormatJson(13, null, 'order_id, action, order_detail_id为必填');
         }
 
         $actionMap = ['incr', 'decr'];
@@ -116,7 +116,7 @@ class IndexController extends Controller{
         }
         //查询菜的数据
         $foodModel = new Food();
-        $food = $foodModel->query('select * from "table" where id = :id', ['id' => $orderDetail['food_id']]);
+        $food = $foodModel->query('select * from #table# where id = :id', ['id' => $orderDetail['food_id']]);
         if ($action == 'incr') {
             $sql = "update #table# set `num` = `num`+1 where `id` = {$orderDetailId}";
             $changeOrderPriceSql = "update #table# set `price`=`price`+ {$food['price']} where `id`={$orderId}";
