@@ -109,19 +109,23 @@ class IndexController extends Controller{
         }
         Database::connect()->beginTransaction();
         $orderDetailModel = new OrderDetail();
+        //查询子订单
         $orderDetail = $orderDetailModel->query("select * from #table# where `order_id`=:order_id and id=:id", ['order_id' => $orderId, 'id' => $orderDetailId])->fetch(\PDO::FETCH_ASSOC);
         if (!$orderDetail) {
             Helpers::responseFormatJson(10, null, '子订单不存在');
         }
+        //查询菜的数据
+        $foodModel = new Food();
+        $food = $foodModel->query('select * from "table" where id = :id', ['id' => $orderDetail['food_id']]);
         if ($action == 'incr') {
             $sql = "update #table# set `num` = `num`+1 where `id` = {$orderDetailId}";
-            $changeOrderPriceSql = "update #table# set `price`=`price`+ {$orderDetail['price']} where `id`={$orderId}";
+            $changeOrderPriceSql = "update #table# set `price`=`price`+ {$food['price']} where `id`={$orderId}";
         } else {
             if ($orderDetail['num'] <= 0) {
                 Helpers::responseFormatJson(10, null, '数量不可小于0');
             }
             $sql = "update #table# set `num` = `num`-1 where `id` = {$orderDetailId}";
-            $changeOrderPriceSql = "update #table# set `price`=`price`- {$orderDetail['price']} where `id`={$orderId}";
+            $changeOrderPriceSql = "update #table# set `price`=`price`- {$food['price']} where `id`={$orderId}";
         }
         if ($orderDetailModel->exec($sql) && $orderModel->exec($changeOrderPriceSql)) {
             Database::connect()->commit();
