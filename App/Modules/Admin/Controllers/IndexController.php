@@ -116,7 +116,7 @@ class IndexController extends Controller{
         }
         //查询菜的数据
         $foodModel = new Food();
-        $food = $foodModel->query('select * from #table# where id = :id', ['id' => $orderDetail['food_id']]);
+        $food = $foodModel->query('select * from #table# where id = :id', ['id' => $orderDetail['food_id']])->fetch(\PDO::FETCH_ASSOC);
         if ($action == 'incr') {
             $sql = "update #table# set `num` = `num`+1 where `id` = {$orderDetailId}";
             $changeOrderPriceSql = "update #table# set `price`=`price`+ {$food['price']} where `id`={$orderId}";
