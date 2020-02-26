@@ -120,14 +120,16 @@ class IndexController extends Controller{
         if ($action == 'incr') {
             $sql = "update #table# set `num` = `num`+1 where `id` = {$orderDetailId}";
             $changeOrderPriceSql = "update #table# set `price`=`price`+ {$food['price']} where `id`={$orderId}";
+            $changeOrderDetailPriceSql = "update #table# set `price`=`price`+ {$food['price']} where `id`={$orderDetailId}";
         } else {
             if ($orderDetail['num'] <= 0) {
                 Helpers::responseFormatJson(10, null, '数量不可小于0');
             }
             $sql = "update #table# set `num` = `num`-1 where `id` = {$orderDetailId}";
             $changeOrderPriceSql = "update #table# set `price`=`price`- {$food['price']} where `id`={$orderId}";
+            $changeOrderDetailPriceSql = "update #table# set `price`=`price`- {$food['price']} where `id`={$orderDetailId}";
         }
-        if ($orderDetailModel->exec($sql) && $orderModel->exec($changeOrderPriceSql)) {
+        if ($orderDetailModel->exec($sql) && $orderModel->exec($changeOrderPriceSql) && $orderDetailModel->exec($changeOrderDetailPriceSql)) {
             Database::connect()->commit();
             Helpers::responseFormatJson(0, null, 'OK');
         } else {
