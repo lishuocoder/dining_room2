@@ -33,7 +33,7 @@ class IndexController extends Controller{
                 $desks[$index]['order'] = $orderModel->getOrderFromDeskId($desk['id'], $desk['status']);
             }
         }
-        echo Helpers::responseJson(Helpers::responseFormat(0, $desks));
+        Helpers::responseJson(Helpers::responseFormat(0, $desks));
     }
     /**
      * 订单查询接口
