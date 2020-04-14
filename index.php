@@ -8,6 +8,9 @@ date_default_timezone_set("Asia/Shanghai");
 //
 require './vendor/autoload.php';
 
+global $configs;
+$configs = require_once './config.php';  //require_once 加载文件一次
+
 $c = \App\Common\Helpers::get('c');
 $a = \App\Common\Helpers::get('a');
 $m = \App\Common\Helpers::get('m');

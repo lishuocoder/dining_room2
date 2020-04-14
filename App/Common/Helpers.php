@@ -15,7 +15,7 @@ class Helpers
 
     public static function config($key)
     {
-        $configs = require_once './config.php';  //require_once 加载文件一次
+        global $configs;
         return $configs[$key];
     }
 

@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 
 use App\Common\BaseController;
+use App\Common\Helpers;
 use App\Common\Upload;
 
 class UploadController extends BaseController
@@ -17,6 +18,9 @@ class UploadController extends BaseController
         $upload = new Upload('img', 5000000, 'upload');
         $u = $upload->uploads();
         $s = $upload->Smallimg(300, 150);
-        var_dump($u, $s);
+        Helpers::responseFormatJson(0, [
+            'img' => Helpers::config('app_url') . $u,
+            'thumb_img' => Helpers::config('app_url') . $s
+        ], 'OK');
     }
 }
