@@ -79,4 +79,36 @@ abstract class Model
         }
         throw new Exception($prepare->errorInfo()[2]);
     }
+
+    /**
+     * 修改数据
+     * @param array $data
+     * @param string $where
+     * @param array $bind
+     * @return bool
+     * @throws Exception
+     */
+    public function update(array $data, string $where, array $bind) {
+        $dataNotNull = [];
+        foreach ($data as $field => $row) {
+            if (!is_null($row)) {
+                $dataNotNull[$field] = $row;
+            }
+        }
+        $updateStr = '';
+        foreach ($dataNotNull as $field=>$value) {
+            $updateStr .= "`{$field}` = :$field,";
+        }
+        $updateStr = trim($updateStr, ',');
+
+        $sql = $this->getSql("update #table# set $updateStr where $where");
+        $prepare = $this->conn->prepare($sql);
+        $input = array_merge($data, $bind);
+
+        $prepare->execute($input);
+        if ($prepare->errorCode() === '00000') {
+            return true;
+        }
+        throw new Exception($prepare->errorInfo()[2]);
+    }
 }

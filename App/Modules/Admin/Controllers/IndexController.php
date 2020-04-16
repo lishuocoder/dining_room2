@@ -162,6 +162,5 @@ class IndexController extends Controller{
             Helpers::responseFormatJson(11, null, '修改失败');
         }
         Helpers::responseFormatJson(0, null, 'OK');
-
     }
 }
