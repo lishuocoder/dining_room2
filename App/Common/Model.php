@@ -100,10 +100,9 @@ abstract class Model
             $updateStr .= "`{$field}` = :$field,";
         }
         $updateStr = trim($updateStr, ',');
-
         $sql = $this->getSql("update #table# set $updateStr where $where");
         $prepare = $this->conn->prepare($sql);
-        $input = array_merge($data, $bind);
+        $input = array_merge($dataNotNull, $bind);
 
         $prepare->execute($input);
         if ($prepare->errorCode() === '00000') {
