@@ -10,8 +10,10 @@ class LoginController extends Controller
 {
     public function loginAction(Request $request)
     {
-        $email = $request->post('email');
-        $password = $request->post('password');
+        //$email = $request->post('email');
+        //$password = $request->post('password');
+        $email = $request->request('email');
+        $password = $request->request('password');
         if (!$email || !$password) {
             Helpers::responseFormatJson(402, null, '请填写邮箱和密码');
         }
