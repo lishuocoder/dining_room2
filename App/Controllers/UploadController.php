@@ -17,7 +17,7 @@ class UploadController extends BaseController
     {
         $upload = new Upload('img', 5000000, 'upload');
         $u = $upload->uploads();
-        $s = $upload->Smallimg(300, 150);
+        $s = $upload->Smallimg(1000, 800);
         Helpers::responseFormatJson(0, [
             'img' => Helpers::config('app_url') . $u,
             'thumb_img' => Helpers::config('app_url') . $s
