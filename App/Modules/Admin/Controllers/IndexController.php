@@ -1,4 +1,5 @@
 <?php
+//当前类的命名空间
 namespace App\Modules\Admin\Controllers;
 
 use App\Common\Helpers;

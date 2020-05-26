@@ -7,7 +7,10 @@ use App\Common\Request;
 use App\Models\User;
 
 class Controller extends BaseController{
-
+    /**
+     * __开头的方法是魔术方法,当控制器的方法为protected的时候,每次调用方法,会自动执行此魔术方法
+     * 在此方法里做权限验证
+     */
     public function __call($method, $argc)
     {
         if ((!$token = $argc[0]->request('token')) && (!$token = $argc[0]->server('HTTP_TOKEN'))) {
