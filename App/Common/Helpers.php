@@ -55,4 +55,14 @@ class Helpers
         ];
         self::responseJson($arr);
     }
+
+    /**
+     * 将相对路径的静态资源转为完整URL
+     * @param string $path
+     * @return string
+     */
+    static public function resourceUrl(string $path) :string
+    {
+        return rtrim(Helpers::config('app_url'), '/')  . $path;
+    }
 }

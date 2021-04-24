@@ -17,7 +17,10 @@ class FoodController extends BaseController
         }
         $model =new Food();
         $rows = $model->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
-
+        $rows = array_map(function ($row) {
+            $row['img'] = Helpers::resourceUrl($row['img']);
+            return $row;
+        }, $rows);
 
         Helpers::responseJson(
             Helpers::responseFormat(0, $rows, 'ok')

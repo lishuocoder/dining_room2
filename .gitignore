@@ -2,3 +2,4 @@ vendor
 error
 config.php
 .idea/*
+.DS_Store
