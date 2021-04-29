@@ -38,7 +38,11 @@ class OrderController extends BaseController
         $orderDetailModel = new OrderDetail();
         $responseData['order']['order_detail'] = $orderDetailModel->query(
             "select #table#.id, #table#.order_id, #table#.food_id, #table#.num, #table#.price as order_price, foods.id as food_id,foods.price as food_price,foods.img,foods.name from #table# left join `foods` on #table#.food_id=foods.id where order_id = {$order['id']}"
-        )->fetchAll(\PDO::FETCH_ASSOC);
+    )->fetchAll(\PDO::FETCH_ASSOC);
+	$responseData['order']['order_detail'] = array_map(function ($row) {
+            $row['img'] = Helpers::resourceUrl($row['img']);
+            return $row;
+        }, $responseData['order']['order_detail']);
 
         Helpers::responseJson(
             Helpers::responseFormat(1, $responseData, 'ok')
